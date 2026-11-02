@@ -7,21 +7,24 @@ import PropTypes from "prop-types";
 //   thread._count?.comments
 // Also add fallback UI so author-less seeded rows do not crash.
 export default function ThreadItem({ thread }) {
+  const authorName = thread.author?.name ?? "Unknown";
+  const authorAvatar = thread.author?. avatarUrl?? "/placeholder-avatar.svg" ;
+  const commentCount = thread._count?.comments?? 0;
   return (
     <li className="thread">
       <div className="thread-top">
-        <img className="avatar" src="/placeholder-avatar.svg" alt="placeholder" />
+        <img className="avatar" src={authorAvatar} alt={authorName} />
 
         <div className="thread-main">
           <h3>{thread.title}</h3>
-          <p className="meta">by {thread.authorName}</p>
+          <p className="meta">by {authorName}</p>
         </div>
 
-        <span className="badge">{thread.commentCount} replies</span>
+        <span className="badge">{commentCount} replies</span>
       </div>
 
       <p>{thread.body}</p>
-      <p className="todo">TODO: Replace flat author fields with nested relation paths.</p>
+      
     </li>
   );
 }
@@ -31,7 +34,13 @@ ThreadItem.propTypes = {
     id: PropTypes.number.isRequired,
     title: PropTypes.string.isRequired,
     body: PropTypes.string.isRequired,
-    authorName: PropTypes.string,
-    commentCount: PropTypes.number,
+    author: PropTypes.shape({
+      name: PropTypes.string,
+      avatarUrl: PropTypes.string,
+    }),
+    
+    _count: PropTypes.shape({
+     comment:PropTypes.number,
+    })
   }).isRequired,
 };
